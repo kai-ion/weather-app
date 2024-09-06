@@ -50,7 +50,18 @@ function displayWeather(data) {
         const cityName = data.name;
         const temperature = Math.round(data.main.temp - 273.15); // Convert to Celsius
         const description = data.weather[0].description;
-        const iconCode = data.weather[0].icon;
+        let iconCode = data.weather[0].icon;
+
+        // Manually set icon for clear sky
+        if (description.toLowerCase() === 'clear sky') {
+            const currentHour = new Date().getHours();
+            if (currentHour >= 6 && currentHour < 18) {
+                iconCode = '01d'; // Daytime clear sky icon
+            } else {
+                iconCode = '01n'; // Nighttime clear sky icon
+            }
+        }
+
         const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@4x.png`;
 
         const temperatureHTML = `
@@ -71,22 +82,43 @@ function displayWeather(data) {
     }
 }
 
+
+function getIconCode(item) {
+    const currentHour = new Date(item.dt * 1000).getHours();
+    if (currentHour >= 6 && currentHour <= 18) {
+        return '01d'; // Daytime clear sky icon
+    } else {
+        return '01n'; // Nighttime clear sky icon
+    }
+}
+
 function displayHourlyForecast(hourlyData) {
     const hourlyForecastDiv = document.getElementById('hourly-forecast');
 
-    const next24Hours = hourlyData.slice(0, 8); // Display the next 24 hours (3-hour intervals)
+    // Filter the data to get every 24-hour interval
+    const twentyFourHourIntervals = hourlyData.filter((item, index) => index % 8 === 0);
 
-    next24Hours.forEach(item => {
+    // Clear previous content
+    hourlyForecastDiv.innerHTML = '';
+
+    twentyFourHourIntervals.forEach(item => {
         const dateTime = new Date(item.dt * 1000); // Convert timestamp to milliseconds
-        const hour = dateTime.getHours();
-        const temperature = Math.round(item.main.temp - 273.15); // Convert to Celsius
-        const iconCode = item.weather[0].icon;
+        const day = dateTime.toLocaleDateString('en-US', { weekday: 'long' }); // Get the day of the week
+        const temperature = Math.round(item.main.temp - 273.15); // Convert from Kelvin to Celsius
+        const description = item.weather[0].description;
+        let iconCode = item.weather[0].icon;
+
+        // Apply custom logic for clear sky
+        if (description.toLowerCase() === 'clear sky') {
+            iconCode = getIconCode(item);
+        }
+
         const iconUrl = `https://openweathermap.org/img/wn/${iconCode}.png`;
 
         const hourlyItemHtml = `
             <div class="hourly-item">
-                <span>${hour}:00</span>
-                <img src="${iconUrl}" alt="Hourly Weather Icon">
+                <span>${day}</span>
+                <img src="${iconUrl}" alt="Daily Weather Icon">
                 <span>${temperature}°C</span>
             </div>
         `;
@@ -94,6 +126,8 @@ function displayHourlyForecast(hourlyData) {
         hourlyForecastDiv.innerHTML += hourlyItemHtml;
     });
 }
+
+
 
 function showImage() {
     const weatherIcon = document.getElementById('weather-icon');
