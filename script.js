@@ -11,36 +11,55 @@ function getWeather() {
     const currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
     const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`;
 
-    // JSON data from current weather API:
-    // data.name: City name
-    // data.main.temp: Current temperature in Kelvin
-    // data.weather[0].description: Weather description (e.g., clear sky, rain)
-    // data.weather[0].icon: Weather icon code
-    fetch(currentWeatherUrl)
-        .then(response => response.json())
-        .then(data => {
-            displayWeather(data);
-        })
-        .catch(error => {
-            console.error('Error fetching current weather data:', error);
-            alert('Error fetching current weather data. Please try again.');
-        });
 
-    // JSON data from forecast API:
-    // data.list: Array of hourly forecast data
-    // Each item contains:
-    // item.dt: Timestamp for the forecast
-    // item.main.temp: Temperature in Kelvin
-    // item.weather[0].description: Weather description
-    // item.weather[0].icon: Weather icon code
-    fetch(forecastUrl)
-        .then(response => response.json())
-        .then(data => {
-            displayHourlyForecast(data.list);
+
+    // Validate if the city exists
+    validateCity(city)
+        .then(isValid => {
+            if (isValid) {
+                const currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+                const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`;
+
+                // Fetch current weather data
+                 // JSON data from current weather API:
+                // data.name: City name
+                // data.main.temp: Current temperature in Kelvin
+                // data.weather[0].description: Weather description (e.g., clear sky, rain)
+                // data.weather[0].icon: Weather icon code
+                fetch(currentWeatherUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        displayWeather(data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching current weather data:', error);
+                        alert('Error fetching current weather data. Please try again.');
+                    });
+                // Fetch 5-day forecast data
+                // JSON data from forecast API:
+                // data.list: Array of hourly forecast data
+                // Each item contains:
+                // item.dt: Timestamp for the forecast
+                // item.main.temp: Temperature in Kelvin
+                // item.weather[0].description: Weather description
+                // item.weather[0].icon: Weather icon code
+                
+                fetch(forecastUrl)
+                    .then(response => response.json())
+                    .then(data => {
+                        displayHourlyForecast(data.list);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching hourly forecast data:', error);
+                        alert('Error fetching hourly forecast data. Please try again.');
+                    });
+            } else {
+                alert('The entered city is not valid. Please enter a valid city name.');
+            }
         })
         .catch(error => {
-            console.error('Error fetching hourly forecast data:', error);
-            alert('Error fetching hourly forecast data. Please try again.');
+            console.error('Error validating city:', error);
+            alert('Error validating city. Please try again.');
         });
 }
 
@@ -84,6 +103,21 @@ function getUserLocation() {
 function isValidCity(city) {
     // Basic validation: check if the city input is not empty and is a valid string.
     return city && city.trim().length > 0;
+}
+
+// Validates the city by making an API call to check if it exists.
+function validateCity(city) {
+    const apiKey = 'bf54835bcdf0503b1832f790dcd02711'; // Your API key
+    const validationUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
+
+    return fetch(validationUrl)
+        .then(response => response.json())
+        .then(data => {
+            return data.cod === 200; // If the response code is 200, the city is valid
+        })
+        .catch(() => {
+            return false; // If there's an error, assume the city is not valid
+        });
 }
 
 function displayWeather(data) {
