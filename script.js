@@ -66,41 +66,46 @@ function getWeather() {
         });
 }
 
+// Retrieves the user's current location and fetches weather and forecast data based on that location.
 function getUserLocation() {
     if (navigator.geolocation) {
+        // Request the user's current position
         navigator.geolocation.getCurrentPosition((position) => {
             const lat = position.coords.latitude;
             const lon = position.coords.longitude;
-            const apiKey = 'bf54835bcdf0503b1832f790dcd02711'; // input your api key
+            const apiKey = 'bf54835bcdf0503b1832f790dcd02711'; // Input your API key here
             const locationUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
             const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
+            // Fetch the current weather data
             fetch(locationUrl)
                 .then(response => response.json())
                 .then(data => {
-                    displayWeather(data);
+                    displayWeather(data); // Display the weather data
                 })
                 .catch(error => {
                     console.error('Error fetching weather data:', error);
-                    alert('Error fetching weather data. Please try again.');
+                    alert('Error fetching weather data. Please try again.'); // Show an alert if an error occurs
                 });
 
+            // Fetch the hourly forecast data
             fetch(forecastUrl)
                 .then(response => response.json())
                 .then(data => {
-                    displayHourlyForecast(data.list);
+                    displayHourlyForecast(data.list); // Display the hourly forecast data
                 })
                 .catch(error => {
                     console.error('Error fetching hourly forecast data:', error);
-                    alert('Error fetching hourly forecast data. Please try again.');
+                    alert('Error fetching hourly forecast data. Please try again.'); // Show an alert if an error occurs
                 });
         }, () => {
-            alert('Unable to retrieve your location.');
+            alert('Unable to retrieve your location.'); // Show an alert if location retrieval fails
         });
     } else {
-        alert('Geolocation is not supported by this browser.');
+        alert('Geolocation is not supported by this browser.'); // Show an alert if geolocation is not supported
     }
 }
+
 
 // Validates the city input to ensure it's not empty and meets basic criteria.
 function isValidCity(city) {
@@ -128,37 +133,38 @@ function clearInputField() {
     document.getElementById('city').value = '';
 }
 
+// Updates the weather display section with current weather data in Fahrenheit and an appropriate icon.
 function displayWeather(data) {
     const tempDivInfo = document.getElementById('temp-div');
     const weatherInfoDiv = document.getElementById('weather-info');
     const weatherIcon = document.getElementById('weather-icon');
     const hourlyForecastDiv = document.getElementById('hourly-forecast');
 
-    // Clear previous content
+    // Clear previous content from the weather and forecast sections
     weatherInfoDiv.innerHTML = '';
     hourlyForecastDiv.innerHTML = '';
     tempDivInfo.innerHTML = '';
 
     if (data.cod === '404') {
+        // Display error message if city is not found
         weatherInfoDiv.innerHTML = `<p>${data.message}</p>`;
     } else {
+        // Extract and convert weather data
         const cityName = data.name;
-        const temperature = Math.round((data.main.temp - 273.15) * 9/5 + 32); // Convert to Fahrenheit
+        const temperature = Math.round((data.main.temp - 273.15) * 9/5 + 32); // Convert from Kelvin to Fahrenheit
         const description = data.weather[0].description;
         let iconCode = data.weather[0].icon;
 
-        // Manually set icon for clear sky
+        // Manually set icon for 'clear sky' based on time of day
         if (description.toLowerCase() === 'clear sky') {
             const currentHour = new Date().getHours();
-            if (currentHour >= 6 && currentHour < 18) {
-                iconCode = '01d'; // Daytime clear sky icon
-            } else {
-                iconCode = '01n'; // Nighttime clear sky icon
-            }
+            iconCode = (currentHour >= 6 && currentHour < 18) ? '01d' : '01n'; // Day or night clear sky icon
         }
 
+        // Construct the URL for the weather icon
         const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@4x.png`;
 
+        // Create HTML content for temperature and weather description
         const temperatureHTML = `
             <p>${temperature}°F</p>
         `;
@@ -168,47 +174,57 @@ function displayWeather(data) {
             <p>${description}</p>
         `;
 
+        // Update the weather display section with new data
         tempDivInfo.innerHTML = temperatureHTML;
         weatherInfoDiv.innerHTML = weatherHtml;
         weatherIcon.src = iconUrl;
         weatherIcon.alt = description;
 
+        // Show the weather icon
         showImage();
     }
 }
 
+// Returns the appropriate icon code based on the time of day for clear sky conditions.
 function getIconCode(item) {
     const currentHour = new Date(item.dt * 1000).getHours();
-    if (currentHour >= 6 && currentHour <= 18) {
-        return '01d'; // Daytime clear sky icon
-    } else {
-        return '01n'; // Nighttime clear sky icon
-    }
+    // Return the icon code for daytime or nighttime clear sky
+    return (currentHour >= 6 && currentHour <= 18) ? '01d' : '01n';
 }
 
+
+// Updates the hourly weather forecast section by displaying weather data for every 24-hour interval in Fahrenheit.
 function displayHourlyForecast(hourlyData) {
     const hourlyForecastDiv = document.getElementById('hourly-forecast');
 
-    // Filter the data to get every 24-hour interval
+    // Filter the data to get weather information for approximately every 24-hour interval
+    // (roughly every 8 data points)
     const twentyFourHourIntervals = hourlyData.filter((item, index) => index % 8 === 0);
 
-    // Clear previous content
+    // Clear previous content from the hourly forecast section
     hourlyForecastDiv.innerHTML = '';
 
+    // Iterate over the filtered hourly data to generate and display forecast items
     twentyFourHourIntervals.forEach(item => {
-        const dateTime = new Date(item.dt * 1000); // Convert timestamp to milliseconds
-        const day = dateTime.toLocaleDateString('en-US', { weekday: 'long' }); // Get the day of the week
-        const temperature = Math.round((item.main.temp - 273.15) * 9/5 + 32); // Convert from Kelvin to Fahrenheit
+        // Convert the timestamp to milliseconds and create a Date object
+        const dateTime = new Date(item.dt * 1000);
+        // Get the day of the week from the Date object
+        const day = dateTime.toLocaleDateString('en-US', { weekday: 'long' });
+        // Convert temperature from Kelvin to Fahrenheit
+        const temperature = Math.round((item.main.temp - 273.15) * 9/5 + 32);
+        // Get weather description and icon code
         const description = item.weather[0].description;
         let iconCode = item.weather[0].icon;
 
-        // Apply custom logic for clear sky
+        // Apply custom logic for clear sky conditions
         if (description.toLowerCase() === 'clear sky') {
             iconCode = getIconCode(item);
         }
 
+        // Construct the URL for the weather icon
         const iconUrl = `https://openweathermap.org/img/wn/${iconCode}.png`;
 
+        // Create HTML for the hourly forecast item
         const hourlyItemHtml = `
             <div class="hourly-item">
                 <span>${day}</span>
@@ -217,9 +233,11 @@ function displayHourlyForecast(hourlyData) {
             </div>
         `;
 
+        // Add the hourly forecast item to the hourly forecast section
         hourlyForecastDiv.innerHTML += hourlyItemHtml;
     });
 }
+
 
 
 function showImage() {
