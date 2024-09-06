@@ -143,7 +143,7 @@ function displayWeather(data) {
         weatherInfoDiv.innerHTML = `<p>${data.message}</p>`;
     } else {
         const cityName = data.name;
-        const temperature = Math.round(data.main.temp - 273.15); // Convert to Celsius
+        const temperature = Math.round((data.main.temp - 273.15) * 9/5 + 32); // Convert to Fahrenheit
         const description = data.weather[0].description;
         let iconCode = data.weather[0].icon;
 
@@ -160,7 +160,7 @@ function displayWeather(data) {
         const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@4x.png`;
 
         const temperatureHTML = `
-            <p>${temperature}°C</p>
+            <p>${temperature}°F</p>
         `;
 
         const weatherHtml = `
@@ -198,7 +198,7 @@ function displayHourlyForecast(hourlyData) {
     twentyFourHourIntervals.forEach(item => {
         const dateTime = new Date(item.dt * 1000); // Convert timestamp to milliseconds
         const day = dateTime.toLocaleDateString('en-US', { weekday: 'long' }); // Get the day of the week
-        const temperature = Math.round(item.main.temp - 273.15); // Convert from Kelvin to Celsius
+        const temperature = Math.round((item.main.temp - 273.15) * 9/5 + 32); // Convert from Kelvin to Fahrenheit
         const description = item.weather[0].description;
         let iconCode = item.weather[0].icon;
 
@@ -213,13 +213,14 @@ function displayHourlyForecast(hourlyData) {
             <div class="hourly-item">
                 <span>${day}</span>
                 <img src="${iconUrl}" alt="Daily Weather Icon">
-                <span>${temperature}°C</span>
+                <span>${temperature}°F</span>
             </div>
         `;
 
         hourlyForecastDiv.innerHTML += hourlyItemHtml;
     });
 }
+
 
 function showImage() {
     const weatherIcon = document.getElementById('weather-icon');
@@ -230,3 +231,11 @@ function showInfo() {
     const infoDiv = document.getElementById('info');
     infoDiv.style.display = infoDiv.style.display === 'none' ? 'block' : 'none';
 }
+/*
+*    *
+*  *
+* *
+* *
+*  *
+*    *
+*/
