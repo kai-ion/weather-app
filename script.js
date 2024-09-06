@@ -1,3 +1,4 @@
+// Fetches the current weather and 5-day forecast for a given city.
 function getWeather() {
     const apiKey = 'bf54835bcdf0503b1832f790dcd02711'; // input your api key
     const city = document.getElementById('city').value;
@@ -10,6 +11,11 @@ function getWeather() {
     const currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`;
     const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`;
 
+    // JSON data from current weather API:
+    // data.name: City name
+    // data.main.temp: Current temperature in Kelvin
+    // data.weather[0].description: Weather description (e.g., clear sky, rain)
+    // data.weather[0].icon: Weather icon code
     fetch(currentWeatherUrl)
         .then(response => response.json())
         .then(data => {
@@ -20,6 +26,13 @@ function getWeather() {
             alert('Error fetching current weather data. Please try again.');
         });
 
+    // JSON data from forecast API:
+    // data.list: Array of hourly forecast data
+    // Each item contains:
+    // item.dt: Timestamp for the forecast
+    // item.main.temp: Temperature in Kelvin
+    // item.weather[0].description: Weather description
+    // item.weather[0].icon: Weather icon code
     fetch(forecastUrl)
         .then(response => response.json())
         .then(data => {
