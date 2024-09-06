@@ -1,5 +1,3 @@
-// get weather function
-// input api key, and fetch the response of city title to make an api call
 function getWeather() {
     const apiKey = 'bf54835bcdf0503b1832f790dcd02711'; // input your api key
     const city = document.getElementById('city').value;
@@ -31,6 +29,42 @@ function getWeather() {
             console.error('Error fetching hourly forecast data:', error);
             alert('Error fetching hourly forecast data. Please try again.');
         });
+}
+
+function getUserLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+            const apiKey = 'bf54835bcdf0503b1832f790dcd02711'; // input your api key
+            const locationUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+            const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${apiKey}`;
+
+            fetch(locationUrl)
+                .then(response => response.json())
+                .then(data => {
+                    displayWeather(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching weather data:', error);
+                    alert('Error fetching weather data. Please try again.');
+                });
+
+            fetch(forecastUrl)
+                .then(response => response.json())
+                .then(data => {
+                    displayHourlyForecast(data.list);
+                })
+                .catch(error => {
+                    console.error('Error fetching hourly forecast data:', error);
+                    alert('Error fetching hourly forecast data. Please try again.');
+                });
+        }, () => {
+            alert('Unable to retrieve your location.');
+        });
+    } else {
+        alert('Geolocation is not supported by this browser.');
+    }
 }
 
 function displayWeather(data) {
@@ -82,7 +116,6 @@ function displayWeather(data) {
     }
 }
 
-
 function getIconCode(item) {
     const currentHour = new Date(item.dt * 1000).getHours();
     if (currentHour >= 6 && currentHour <= 18) {
@@ -127,9 +160,9 @@ function displayHourlyForecast(hourlyData) {
     });
 }
 
-
-
 function showImage() {
     const weatherIcon = document.getElementById('weather-icon');
     weatherIcon.style.display = 'block'; // Make the image visible once it's loaded
 }
+
+
