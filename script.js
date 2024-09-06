@@ -165,4 +165,7 @@ function showImage() {
     weatherIcon.style.display = 'block'; // Make the image visible once it's loaded
 }
 
-
+function showInfo() {
+    const infoDiv = document.getElementById('info');
+    infoDiv.style.display = infoDiv.style.display === 'none' ? 'block' : 'none';
+}
