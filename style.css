@@ -1,3 +1,4 @@
+/* General body styles */
 body {
     background: #222;
     font-family: 'Poppins', sans-serif;
@@ -8,10 +9,11 @@ body {
     margin: 0;
 }
 
+/* Container for weather info */
 #weather-container {
     background: rgba(255, 255, 255, 0.2);
-    max-width: 500px;
-    padding: 25px;
+    max-width: 400px; /* Adjusted max-width for a smaller container */
+    padding: 20px; /* Padding for spacing */
     border-radius: 20px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     backdrop-filter: blur(10px);
@@ -19,66 +21,76 @@ body {
     text-align: center;
 }
 
+/* Heading, labels, and paragraphs styling */
 h2, label, p {
     color: #fff;
     margin: 8px 0;
 }
 
+/* Input field styling */
 input {
-    width: calc(100% - 16px);
-    padding: 8px;
+    width: 100%; /* Full width of the container */
+    max-width: 300px; /* Maximum width for the input field */
+    padding: 6px; /* Padding for spacing */
     box-sizing: border-box;
     border-radius: 10px;
     border: 1px solid white;
-    margin-top: 20px;
+    margin-top: 10px; /* Margin for spacing */
 }
 
+/* Button styling */
 button {
     background: #222;
     color: white;
-    padding: 10px;
+    padding: 8px; /* Padding for spacing */
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    margin-top: 20px;
-    width: calc(100% - 16px); /* Full width minus padding */
-    font-size: 15px;
+    margin-top: 10px; /* Margin for spacing */
+    width: 100%; /* Full width of the container */
+    max-width: 300px; /* Maximum width for the button */
+    font-size: 14px; /* Font size for readability */
     box-sizing: border-box;
 }
 
+/* Button hover effect */
 button:hover {
     background: #e7e7e7;
     color: #222; /* Change text color on hover */
 }
 
+/* Weather icon styling */
 #weather-icon {
-    width: 200px;
-    height: 200px;
-    margin: 0 auto 10px; 
-    margin-bottom: 0;
+    width: 150px; /* Adjusted size for smaller icons */
+    height: 150px; /* Adjusted size for smaller icons */
+    margin: 0 auto 10px;
     display: none;
 }
 
+/* Temperature display styling */
 #temp-div p {
-    font-size: 60px;
-    margin-top: -30px;
+    font-size: 50px; /* Font size for temperature */
+    margin-top: -20px; /* Margin for spacing */
 }
 
+/* Weather info styling */
 #weather-info {
-    font-size: 20px;
+    font-size: 18px; /* Font size for weather info */
 }
 
+/* Hourly forecast container styling */
 #hourly-forecast {
-    margin-top: 50px;
+    margin-top: 30px; /* Margin for spacing */
     overflow-x: auto;
     white-space: nowrap;
     display: flex;
     justify-content: space-between;
 }
 
+/* Hourly item styling */
 .hourly-item {
     flex: 0 0 auto;
-    width: 80px;
+    width: 60px; /* Width for hourly items */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -86,21 +98,18 @@ button:hover {
     color: white;
 }
 
+/* Hourly item image styling */
 .hourly-item img {
-    width: 30px;
-    height: 30px;
+    width: 25px; /* Width for hourly item icons */
+    height: 25px; /* Height for hourly item icons */
     margin-bottom: 5px;
 }
 
-#hourly-heading {
-    color: #fff;
-    margin-top: 10px;
-}
-
+/* Info section styling */
 #info {
     color: #fff;
     margin-top: 20px;
     padding: 10px;
     border-radius: 10px;
-    background: rgba(0, 0, 0, 0.5);
+    
 }
