@@ -56,6 +56,9 @@ function getWeather() {
             } else {
                 alert('The entered city is not valid. Please enter a valid city name.');
             }
+
+            // Clear the input field after processing
+            clearInputField();
         })
         .catch(error => {
             console.error('Error validating city:', error);
@@ -118,6 +121,11 @@ function validateCity(city) {
         .catch(() => {
             return false; // If there's an error, assume the city is not valid
         });
+}
+
+// Clears the input field after the weather data has been processed.
+function clearInputField() {
+    document.getElementById('city').value = '';
 }
 
 function displayWeather(data) {
