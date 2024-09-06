@@ -3,8 +3,8 @@ function getWeather() {
     const apiKey = 'bf54835bcdf0503b1832f790dcd02711'; // input your api key
     const city = document.getElementById('city').value;
 
-    if (!city) {
-        alert('Please enter a city');
+    if (!isValidCity(city)) {
+        alert('Please enter a valid city name');
         return;
     }
 
@@ -78,6 +78,12 @@ function getUserLocation() {
     } else {
         alert('Geolocation is not supported by this browser.');
     }
+}
+
+// Validates the city input to ensure it's not empty and meets basic criteria.
+function isValidCity(city) {
+    // Basic validation: check if the city input is not empty and is a valid string.
+    return city && city.trim().length > 0;
 }
 
 function displayWeather(data) {
