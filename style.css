@@ -5,7 +5,7 @@ body {
     align-items: center;
     justify-content: center;
     height: 90vh;
-    margin: 10;
+    margin: 0;
 }
 
 #weather-container {
@@ -41,12 +41,14 @@ button {
     border-radius: 10px;
     cursor: pointer;
     margin-top: 20px;
-    width: 100px;
+    width: calc(100% - 16px); /* Full width minus padding */
     font-size: 15px;
+    box-sizing: border-box;
 }
 
 button:hover {
     background: #e7e7e7;
+    color: #222; /* Change text color on hover */
 }
 
 #weather-icon {
@@ -65,8 +67,6 @@ button:hover {
 #weather-info {
     font-size: 20px;
 }
-
-
 
 #hourly-forecast {
     margin-top: 50px;
@@ -95,4 +95,12 @@ button:hover {
 #hourly-heading {
     color: #fff;
     margin-top: 10px;
+}
+
+#info {
+    color: #fff;
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.5);
 }
