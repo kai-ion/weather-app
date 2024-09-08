@@ -4,6 +4,15 @@
 
 A simple weather application that allows users to search for weather updates by city or use their current location to fetch real-time weather data. The app also displays a 5-day weather forecast.
 
+Sure, here's the updated section with the live demo link:
+
+---
+
+## Live Demo
+
+You can view the live demo of the Weather App [here](https://kai-ion.github.io/weather-app/).
+
+
 ## Features
 
 - Search weather by city name.
